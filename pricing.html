@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Services — Sitework</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
   :root {
     --black:   #0c0c0c;
@@ -35,8 +36,6 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-
-
 
   /* ── HERO ── */
   .hero {
@@ -541,9 +540,8 @@
     .compare-table th, .compare-table td { padding: 10px 12px; }
   }
 
-
   </style>
-<link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
 
@@ -963,6 +961,7 @@
   </div>
 </div>
 
+<link rel="stylesheet" href="styles.css">
 <style>
   /* ── FREE MOCK CTA ── */
   .mock-cta {
@@ -1151,10 +1150,14 @@
 
 
 
+
+
 <script>
-// Nav
+// Nav scroll
 const nav = document.getElementById('nav');
 if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50), {passive:true});
+
+// Mobile menu
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 if (hamburger) hamburger.addEventListener('click', () => {
@@ -1164,6 +1167,8 @@ if (hamburger) hamburger.addEventListener('click', () => {
 function closeMobile() {
   if (mobileMenu) { mobileMenu.classList.remove('open'); document.body.classList.remove('menu-open'); }
 }
+
+// Dropdowns
 function toggleDrop(id) {
   const el = document.getElementById(id);
   const isOpen = el.classList.contains('open');
@@ -1172,28 +1177,18 @@ function toggleDrop(id) {
     const b = d.querySelector('button');
     if (b) b.setAttribute('aria-expanded','false');
   });
-  if (!isOpen) { el.classList.add('open'); el.querySelector('button').setAttribute('aria-expanded','true'); }
+  if (!isOpen) {
+    el.classList.add('open');
+    el.querySelector('button').setAttribute('aria-expanded','true');
+  }
 }
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('.nav-drop')) document.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
+  if (!e.target.closest('.nav-drop')) {
+    document.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
+  }
 });
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
-});
-</script>
-<script>
-// Billing toggle
-const toggleBtns = document.querySelectorAll('.toggle-btn');
-const monthlyPrices = document.querySelectorAll('.price-monthly');
-const annualPrices = document.querySelectorAll('.price-annual');
-toggleBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    toggleBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const isAnnual = btn.dataset.plan === 'annual';
-    if (monthlyPrices.length) monthlyPrices.forEach(p => p.style.display = isAnnual ? 'none' : '');
-    if (annualPrices.length) annualPrices.forEach(p => p.style.display = isAnnual ? '' : 'none');
-  });
 });
 </script>
 </body>
