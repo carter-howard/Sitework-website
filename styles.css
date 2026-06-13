@@ -232,33 +232,6 @@ h1, h2, h3, h4, h5 {
 
 .nav-cta:hover { background: var(--green-light) !important; }
 
-.nav-scan {
-  display: inline-flex;
-  align-items: center;
-  padding: 9px 18px;
-  border: 1px solid var(--green);
-  border-radius: 2px;
-  color: var(--green) !important;
-  font-size: 0.7rem !important;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  transition: background .2s, color .2s;
-}
-.nav-scan:hover {
-  background: var(--green);
-  color: var(--white) !important;
-}
-
-.mobile-scan {
-  color: var(--green) !important;
-  font-weight: 700;
-  border: 1px solid var(--green) !important;
-  border-radius: 2px;
-  text-align: center;
-  margin: 4px 0;
-}
-
 .hamburger {
   display: none;
   flex-direction: column;
@@ -282,11 +255,24 @@ h1, h2, h3, h4, h5 {
   flex-direction: column;
   background: var(--dark);
   border-top: 1px solid var(--border);
-  padding: 20px 40px;
+  padding: 20px 40px 40px;
   gap: 16px;
+  max-height: calc(100svh - 72px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
-.mobile-menu.open { display: flex; }
+.mobile-menu.open {
+  display: flex;
+}
+
+body.menu-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
 
 .mobile-menu a {
   font-family: 'Montserrat', sans-serif;
@@ -1362,6 +1348,7 @@ h1, h2, h3, h4, h5 {
   .nav-inner { padding: 0 20px; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
+  .nav { overflow: visible; }
   .hero-inner { padding: 60px 20px; }
   .hero-headline { font-size: clamp(3.5rem, 12vw, 5rem); }
   .hero-stats { flex-direction: column; }
