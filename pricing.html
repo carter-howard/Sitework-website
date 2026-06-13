@@ -38,13 +38,13 @@
   }
 
   /* ── HERO ── */
-  .hero {
+  .pr-hero {
     padding: 130px 40px 96px;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
+  .pr-hero::before {
     content: '';
     position: absolute;
     top: 60px; left: 50%; transform: translateX(-50%);
@@ -52,7 +52,7 @@
     background: radial-gradient(ellipse, rgba(90,107,70,0.08) 0%, transparent 70%);
     pointer-events: none;
   }
-  .hero-eyebrow {
+  .pr-hero-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -63,7 +63,7 @@
     color: var(--green2);
     margin-bottom: 24px;
   }
-  .hero-eyebrow::before, .hero-eyebrow::after {
+  .pr-hero-eyebrow::before, .pr-hero-eyebrow::after {
     content: '';
     display: block;
     width: 24px;
@@ -71,7 +71,7 @@
     background: var(--green);
     opacity: 0.6;
   }
-  .hero h1 {
+  .pr-hero h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(56px, 9vw, 100px);
     line-height: 0.9;
@@ -79,11 +79,11 @@
     color: var(--white);
     margin-bottom: 24px;
   }
-  .hero h1 em {
+  .pr-hero h1 em {
     font-style: normal;
     color: var(--green2);
   }
-  .hero-sub {
+  .pr-hero-sub {
     font-size: 17px;
     color: var(--dim);
     max-width: 520px;
@@ -511,14 +511,14 @@
   .btn-ghost:hover { color: var(--white); border-color: var(--dim); }
 
   /* ── TRUST BAR ── */
-  .trust-bar {
+  .pr-trust-bar {
     display: flex;
     justify-content: center;
     gap: 48px;
     padding: 32px 32px 0;
     flex-wrap: wrap;
   }
-  .trust-item {
+  .pr-trust-item {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -528,10 +528,10 @@
     color: var(--dim);
     text-transform: uppercase;
   }
-  .trust-item svg { color: var(--green); flex-shrink: 0; }
+  .pr-trust-item svg { color: var(--green); flex-shrink: 0; }
 
   @media (max-width: 800px) {
-.hero { padding: 120px 20px 72px; }
+.pr-hero { padding: 120px 20px 72px; }
     .pricing-section, .included-section, .faq-section { padding-left: 20px; padding-right: 20px; }
     .cards { grid-template-columns: 1fr; }
     .card.featured { transform: none; }
@@ -539,8 +539,7 @@
     .compare-table { font-size: 12px; }
     .compare-table th, .compare-table td { padding: 10px 12px; }
   }
-
-  </style>
+</style>
 
 </head>
 <body>
@@ -552,6 +551,8 @@
       <img src="logo-horizontal.png" alt="Sitework" class="nav-logo-img" width="200" height="40">
     </a>
     <div class="nav-links">
+
+      <!-- TRADES dropdown -->
       <div class="nav-drop" id="dropTrades">
         <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropTrades')">
           Trades
@@ -567,6 +568,8 @@
           <a href="home-services-website-design.html" role="menuitem">Home Services</a>
         </div>
       </div>
+
+      <!-- SERVICES dropdown -->
       <div class="nav-drop" id="dropServices">
         <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropServices')">
           Services
@@ -582,9 +585,21 @@
           <a href="index.html#services" role="menuitem">Consulting &amp; Coaching</a>
         </div>
       </div>
-      <a href="why-sitework.html">Why Sitework</a>
-      <a href="resources.html">Resources</a>
+
+      <!-- WHY SITEWORK dropdown -->
+      <div class="nav-drop" id="dropWhy">
+        <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropWhy')">
+          Why Sitework
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-panel" role="menu">
+          <div class="panel-label">Learn More</div>
+          <a href="why-sitework.html" role="menuitem">About</a>
+          <a href="resources.html" role="menuitem">Resources</a>
+        </div>
+      </div>
       <a href="pricing.html" class="active">Pricing</a>
+      <a href="https://analyzer.sitework.build/scan" class="nav-scan" target="_blank">Free Scan</a>
       <a href="index.html#contact" class="nav-cta">Let's Talk</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -606,29 +621,31 @@
     <a href="index.html#services" class="indent" onclick="closeMobile()">Reputation Management</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Growth Strategy</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Consulting &amp; Coaching</a>
-    <a href="why-sitework.html" onclick="closeMobile()">Why Sitework</a>
-    <a href="resources.html" onclick="closeMobile()">Resources</a>
+    <span class="mobile-drop-label">Why Sitework</span>
+    <a href="why-sitework.html" class="indent" onclick="closeMobile()">About</a>
+    <a href="resources.html" class="indent" onclick="closeMobile()">Resources</a>
     <a href="pricing.html" onclick="closeMobile()">Pricing</a>
+    <a href="https://analyzer.sitework.build/scan" onclick="closeMobile()" class="mobile-scan" target="_blank">Free Site Scan</a>
     <a href="index.html#contact" onclick="closeMobile()" class="mobile-cta">Let's Talk</a>
   </div>
 </nav>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-eyebrow">What's Included</div>
+<div class="pr-hero">
+  <div class="pr-hero-eyebrow">What's Included</div>
   <h1>ONE PARTNER.<br><em>EVERYTHING</em><br>ONLINE.</h1>
-  <p class="hero-sub">Everything your trade business needs to get found, look credible, and win more jobs online.</p>
+  <p class="pr-hero-sub">Everything your trade business needs to get found, look credible, and win more jobs online.</p>
 
-  <div class="trust-bar">
-    <div class="trust-item">
+  <div class="pr-trust-bar">
+    <div class="pr-trust-item">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
       No long-term contracts
     </div>
-    <div class="trust-item">
+    <div class="pr-trust-item">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
       Fast turnaround
     </div>
-    <div class="trust-item">
+    <div class="pr-trust-item">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
       Cancel anytime
     </div>
