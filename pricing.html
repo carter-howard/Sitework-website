@@ -587,21 +587,115 @@
     .compare-table { font-size: 12px; }
     .compare-table th, .compare-table td { padding: 10px 12px; }
   }
+
+  /* ── Shared nav styles (matches main site) ── */
+  .nav { position:fixed; top:0; left:0; right:0; z-index:100; transition:background .35s,box-shadow .35s; }
+  .nav-inner { max-width:1200px; margin:0 auto; padding:0 40px; height:72px; display:flex; align-items:center; justify-content:space-between; }
+  .nav-logo { display:flex; align-items:center; text-decoration:none; }
+  .nav-logo-img { height:36px; width:auto; transition:height .3s ease; }
+  .nav-links { display:flex; align-items:center; gap:36px; }
+  .nav-links a { font-family:'Montserrat',sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#999; text-decoration:none; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:#fff; }
+  .nav-cta { background:#5A6B46 !important; color:#fff !important; padding:10px 24px; font-size:0.7rem !important; clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)); }
+  .nav-cta:hover { background:#7e9460 !important; }
+  .nav.scrolled { background:rgba(10,10,10,.88); backdrop-filter:blur(12px); box-shadow:0 1px 0 rgba(255,255,255,.08); }
+  .nav.scrolled .nav-inner { height:58px; }
+  .nav.scrolled .nav-logo-img { height:28px; }
+  .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:24px; height:2px; background:#fff; transition:all .3s; }
+  .mobile-menu { display:none; flex-direction:column; background:#161616; border-top:1px solid rgba(255,255,255,.08); padding:20px 40px; gap:16px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-family:'Montserrat',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#999; text-decoration:none; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+  .mobile-menu a.mobile-cta { background:#5A6B46; color:#fff !important; padding:12px 20px; text-align:center; border:none; }
+  .mobile-drop-label { font-family:'Montserrat',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:#7e9460; padding:14px 0 4px; }
+  .mobile-menu a.indent { padding-left:14px; font-size:0.75rem; color:#888 !important; }
+  .nav-drop { position:relative; }
+  .nav-drop > button { font-family:'Montserrat',sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#999; background:none; border:none; cursor:pointer; padding:0; display:flex; align-items:center; gap:6px; transition:color .2s; }
+  .nav-drop > button svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2.5; transition:transform .25s; }
+  .nav-drop > button:hover, .nav-drop.open > button { color:#fff; }
+  .nav-drop.open > button svg { transform:rotate(180deg); }
+  .nav-panel { position:absolute; top:calc(100% + 18px); left:50%; background:#161616; border:1px solid rgba(255,255,255,.1); padding:10px; min-width:200px; opacity:0; visibility:hidden; transform:translateX(-50%) translateY(-6px); transition:opacity .2s,transform .2s,visibility .2s; z-index:200; }
+  .nav-drop.open .nav-panel { opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
+  .nav-panel a { display:block; padding:11px 16px; font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#999 !important; text-decoration:none; transition:color .15s,background .15s; white-space:nowrap; }
+  .nav-panel a:hover { color:#fff !important; background:rgba(255,255,255,.04); }
+  .panel-label { font-size:0.58rem; letter-spacing:0.2em; color:#555; font-weight:700; padding:10px 16px 6px; border-top:1px solid rgba(255,255,255,.08); margin-top:4px; }
+  .panel-label:first-child { border-top:none; margin-top:0; padding-top:6px; }
+  @media(max-width:768px){ .nav-links{display:none;} .hamburger{display:flex;} .nav-inner{padding:0 20px;} }
+
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <a href="https://sitework.build" class="nav-logo">
-    <img src="logo-horizontal.png" alt="Sitework" style="height:32px; display:block;">
-  </a>
-  <div class="nav-links">
-    <a href="https://sitework.build/#services">Services</a>
-    <a href="https://sitework.build/#approach">About</a>
-    <a href="https://sitework.build/#contact">Contact</a>
-    <a href="pricing.html" class="active">Services</a>
-    <a href="#free-mock" class="nav-cta">Build My Free Mock</a>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo-horizontal.png" alt="Sitework" class="nav-logo-img" width="200" height="40">
+    </a>
+    <div class="nav-links">
+
+      <!-- TRADES dropdown -->
+      <div class="nav-drop" id="dropTrades">
+        <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropTrades')">
+          Trades
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-panel" role="menu">
+          <div class="panel-label">Trades We Serve</div>
+          <a href="hvac-website-design.html" role="menuitem">HVAC</a>
+          <a href="plumber-website-design.html" role="menuitem">Plumbing</a>
+          <a href="electrician-website-design.html" role="menuitem">Electrical</a>
+          <a href="roofing-website-design.html" role="menuitem">Roofing</a>
+          <a href="construction-website-design.html" role="menuitem">Construction</a>
+          <a href="home-services-website-design.html" role="menuitem">Home Services</a>
+        </div>
+      </div>
+
+      <!-- SERVICES dropdown -->
+      <div class="nav-drop" id="dropServices">
+        <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropServices')">
+          Services
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-panel" role="menu">
+          <div class="panel-label">What We Do</div>
+          <a href="index.html#services" role="menuitem">Web Design</a>
+          <a href="index.html#services" role="menuitem">Local SEO</a>
+          <a href="index.html#services" role="menuitem">Google Business Profile</a>
+          <a href="index.html#services" role="menuitem">Reputation Management</a>
+          <a href="index.html#services" role="menuitem">Growth Strategy</a>
+          <a href="index.html#services" role="menuitem">Consulting &amp; Coaching</a>
+        </div>
+      </div>
+
+      <a href="why-sitework.html">Why Sitework</a>
+      <a href="resources.html">Resources</a>
+      <a href="pricing.html" class="active">Pricing</a>
+      <a href="index.html#contact" class="nav-cta">Let's Talk</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <span class="mobile-drop-label">Trades We Serve</span>
+    <a href="hvac-website-design.html" class="indent" onclick="closeMobile()">HVAC</a>
+    <a href="plumber-website-design.html" class="indent" onclick="closeMobile()">Plumbing</a>
+    <a href="electrician-website-design.html" class="indent" onclick="closeMobile()">Electrical</a>
+    <a href="roofing-website-design.html" class="indent" onclick="closeMobile()">Roofing</a>
+    <a href="construction-website-design.html" class="indent" onclick="closeMobile()">Construction</a>
+    <a href="home-services-website-design.html" class="indent" onclick="closeMobile()">Home Services</a>
+    <span class="mobile-drop-label">Services</span>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Web Design</a>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Local SEO</a>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Google Business Profile</a>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Reputation Management</a>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Growth Strategy</a>
+    <a href="index.html#services" class="indent" onclick="closeMobile()">Consulting &amp; Coaching</a>
+    <a href="why-sitework.html" onclick="closeMobile()">Why Sitework</a>
+    <a href="resources.html" onclick="closeMobile()">Resources</a>
+    <a href="pricing.html" onclick="closeMobile()">Pricing</a>
+    <a href="index.html#contact" onclick="closeMobile()" class="mobile-cta">Let's Talk</a>
   </div>
 </nav>
 
@@ -1137,6 +1231,33 @@
     .mock-form-row { grid-template-columns: 1fr; }
   }
 </style>
+
+
+<script>
+// Nav scroll shrink
+const nav = document.getElementById('nav');
+if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50), {passive:true});
+
+// Mobile menu
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+if (hamburger) hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+function closeMobile() { if(mobileMenu) mobileMenu.classList.remove('open'); }
+
+// Dropdowns
+function toggleDrop(id) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); const b=d.querySelector('button'); if(b) b.setAttribute('aria-expanded','false'); });
+  if (!isOpen) { el.classList.add('open'); el.querySelector('button').setAttribute('aria-expanded','true'); }
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-drop')) document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); const b=d.querySelector('button'); if(b) b.setAttribute('aria-expanded','false'); });
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); });
+});
+</script>
 
 </body>
 </html>
