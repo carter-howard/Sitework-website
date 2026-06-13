@@ -262,7 +262,17 @@ h1, h2, h3, h4, h5 {
   -webkit-overflow-scrolling: touch;
 }
 
-.mobile-menu.open { display: flex; }
+.mobile-menu.open {
+  display: flex;
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 99;
+}
 
 .mobile-menu a {
   font-family: 'Montserrat', sans-serif;
