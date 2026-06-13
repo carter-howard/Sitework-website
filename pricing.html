@@ -532,9 +532,7 @@
   .trust-item svg { color: var(--green); flex-shrink: 0; }
 
   @media (max-width: 800px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero { padding: 120px 20px 72px; }
+.hero { padding: 120px 20px 72px; }
     .pricing-section, .included-section, .faq-section { padding-left: 20px; padding-right: 20px; }
     .cards { grid-template-columns: 1fr; }
     .card.featured { transform: none; }
@@ -543,9 +541,9 @@
     .compare-table th, .compare-table td { padding: 10px 12px; }
   }
 
-  /* nav styles inherited from styles.css */
 
-</style>
+  </style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -556,8 +554,6 @@
       <img src="logo-horizontal.png" alt="Sitework" class="nav-logo-img" width="200" height="40">
     </a>
     <div class="nav-links">
-
-      <!-- TRADES dropdown -->
       <div class="nav-drop" id="dropTrades">
         <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropTrades')">
           Trades
@@ -573,8 +569,6 @@
           <a href="home-services-website-design.html" role="menuitem">Home Services</a>
         </div>
       </div>
-
-      <!-- SERVICES dropdown -->
       <div class="nav-drop" id="dropServices">
         <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropServices')">
           Services
@@ -590,21 +584,9 @@
           <a href="index.html#services" role="menuitem">Consulting &amp; Coaching</a>
         </div>
       </div>
-
-      <!-- WHY SITEWORK dropdown -->
-      <div class="nav-drop" id="dropWhy">
-        <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropWhy')">
-          Why Sitework
-          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="nav-panel" role="menu">
-          <div class="panel-label">Learn More</div>
-          <a href="why-sitework.html" role="menuitem">About</a>
-          <a href="resources.html" role="menuitem">Resources</a>
-        </div>
-      </div>
+      <a href="why-sitework.html">Why Sitework</a>
+      <a href="resources.html">Resources</a>
       <a href="pricing.html" class="active">Pricing</a>
-      <a href="https://analyzer.sitework.build/scan" class="nav-scan" target="_blank">Free Scan</a>
       <a href="index.html#contact" class="nav-cta">Let's Talk</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -626,11 +608,9 @@
     <a href="index.html#services" class="indent" onclick="closeMobile()">Reputation Management</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Growth Strategy</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Consulting &amp; Coaching</a>
-    <span class="mobile-drop-label">Why Sitework</span>
-    <a href="why-sitework.html" class="indent" onclick="closeMobile()">About</a>
-    <a href="resources.html" class="indent" onclick="closeMobile()">Resources</a>
+    <a href="why-sitework.html" onclick="closeMobile()">Why Sitework</a>
+    <a href="resources.html" onclick="closeMobile()">Resources</a>
     <a href="pricing.html" onclick="closeMobile()">Pricing</a>
-    <a href="https://analyzer.sitework.build/scan" onclick="closeMobile()" class="mobile-scan" target="_blank">Free Site Scan</a>
     <a href="index.html#contact" onclick="closeMobile()" class="mobile-cta">Let's Talk</a>
   </div>
 </nav>
@@ -1169,31 +1149,52 @@
 </style>
 
 
+
+
 <script>
-// Nav scroll shrink
+// Nav
 const nav = document.getElementById('nav');
 if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50), {passive:true});
-
-// Mobile menu
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
-if (hamburger) hamburger.addEventListener('click', () => { mobileMenu.classList.toggle('open'); document.body.classList.toggle('menu-open', mobileMenu.classList.contains('open')); });
-function closeMobile() { if(mobileMenu) { mobileMenu.classList.remove('open'); document.body.classList.remove('menu-open'); } }
-
-// Dropdowns
+if (hamburger) hamburger.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+  document.body.classList.toggle('menu-open', mobileMenu.classList.contains('open'));
+});
+function closeMobile() {
+  if (mobileMenu) { mobileMenu.classList.remove('open'); document.body.classList.remove('menu-open'); }
+}
 function toggleDrop(id) {
   const el = document.getElementById(id);
   const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); const b=d.querySelector('button'); if(b) b.setAttribute('aria-expanded','false'); });
+  document.querySelectorAll('.nav-drop').forEach(d => {
+    d.classList.remove('open');
+    const b = d.querySelector('button');
+    if (b) b.setAttribute('aria-expanded','false');
+  });
   if (!isOpen) { el.classList.add('open'); el.querySelector('button').setAttribute('aria-expanded','true'); }
 }
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('.nav-drop')) document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); const b=d.querySelector('button'); if(b) b.setAttribute('aria-expanded','false'); });
+  if (!e.target.closest('.nav-drop')) document.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
 });
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') document.querySelectorAll('.nav-drop').forEach(d => { d.classList.remove('open'); });
+  if (e.key === 'Escape') document.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
 });
 </script>
-
+<script>
+// Billing toggle
+const toggleBtns = document.querySelectorAll('.toggle-btn');
+const monthlyPrices = document.querySelectorAll('.price-monthly');
+const annualPrices = document.querySelectorAll('.price-annual');
+toggleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const isAnnual = btn.dataset.plan === 'annual';
+    if (monthlyPrices.length) monthlyPrices.forEach(p => p.style.display = isAnnual ? 'none' : '');
+    if (annualPrices.length) annualPrices.forEach(p => p.style.display = isAnnual ? '' : 'none');
+  });
+});
+</script>
 </body>
 </html>
