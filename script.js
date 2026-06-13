@@ -10,10 +10,12 @@ const mobileMenu = document.getElementById('mobileMenu');
 
 hamburger.addEventListener('click', () => {
   mobileMenu.classList.toggle('open');
+  document.body.classList.toggle('menu-open', mobileMenu.classList.contains('open'));
 });
 
 function closeMobile() {
   mobileMenu.classList.remove('open');
+  document.body.classList.remove('menu-open');
 }
 
 // ── SCROLL ANIMATIONS ──

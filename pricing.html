@@ -558,8 +558,8 @@
   .nav.scrolled .nav-logo-img { height:28px; }
   .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
   .hamburger span { display:block; width:24px; height:2px; background:#fff; transition:all .3s; }
-  .mobile-menu { display:none; flex-direction:column; background:#161616; border-top:1px solid rgba(255,255,255,.08); padding:20px 40px; gap:16px; max-height:calc(100vh - 72px); overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  .mobile-menu.open { display:flex; position:fixed; top:72px; left:0; right:0; bottom:0; overflow-y:auto; -webkit-overflow-scrolling:touch; z-index:99; }
+  .mobile-menu { display:none; flex-direction:column; background:#161616; border-top:1px solid rgba(255,255,255,.08); padding:20px 40px 40px; gap:16px; max-height:calc(100svh - 72px); overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+  .mobile-menu.open { display:flex; } body.menu-open { overflow:hidden; position:fixed; width:100%; }
   .mobile-menu a { font-family:'Montserrat',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#999; text-decoration:none; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08); }
   .mobile-menu a.mobile-cta { background:#5A6B46; color:#fff !important; padding:12px 20px; text-align:center; border:none; }
   .mobile-drop-label { font-family:'Montserrat',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:#7e9460; padding:14px 0 4px; }
@@ -1196,8 +1196,8 @@ if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled'
 // Mobile menu
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
-if (hamburger) hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-function closeMobile() { if(mobileMenu) mobileMenu.classList.remove('open'); }
+if (hamburger) hamburger.addEventListener('click', () => { mobileMenu.classList.toggle('open'); document.body.classList.toggle('menu-open', mobileMenu.classList.contains('open')); });
+function closeMobile() { if(mobileMenu) { mobileMenu.classList.remove('open'); document.body.classList.remove('menu-open'); } }
 
 // Dropdowns
 function toggleDrop(id) {

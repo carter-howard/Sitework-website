@@ -255,24 +255,23 @@ h1, h2, h3, h4, h5 {
   flex-direction: column;
   background: var(--dark);
   border-top: 1px solid var(--border);
-  padding: 20px 40px;
+  padding: 20px 40px 40px;
   gap: 16px;
-  max-height: calc(100vh - 72px);
+  max-height: calc(100svh - 72px);
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .mobile-menu.open {
   display: flex;
+}
+
+body.menu-open {
+  overflow: hidden;
   position: fixed;
-  top: 72px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  z-index: 150;
-  overscroll-behavior: contain;
+  width: 100%;
 }
 
 .mobile-menu a {
