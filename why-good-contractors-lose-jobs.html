@@ -129,9 +129,20 @@
         </div>
       </div>
 
-      <a href="why-sitework.html">Why Sitework</a>
-      <a href="resources.html">Resources</a>
+      <!-- WHY SITEWORK dropdown -->
+      <div class="nav-drop" id="dropWhy">
+        <button aria-haspopup="true" aria-expanded="false" onclick="toggleDrop('dropWhy')">
+          Why Sitework
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-panel" role="menu">
+          <div class="panel-label">Learn More</div>
+          <a href="why-sitework.html" role="menuitem">About</a>
+          <a href="resources.html" role="menuitem">Resources</a>
+        </div>
+      </div>
       <a href="pricing.html">Pricing</a>
+      <a href="https://analyzer.sitework.build/scan" class="nav-scan" target="_blank">Free Scan</a>
       <a href="index.html#contact" class="nav-cta">Let's Talk</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -153,9 +164,11 @@
     <a href="index.html#services" class="indent" onclick="closeMobile()">Reputation Management</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Growth Strategy</a>
     <a href="index.html#services" class="indent" onclick="closeMobile()">Consulting &amp; Coaching</a>
-    <a href="why-sitework.html" onclick="closeMobile()">Why Sitework</a>
-    <a href="resources.html" onclick="closeMobile()">Resources</a>
+    <span class="mobile-drop-label">Why Sitework</span>
+    <a href="why-sitework.html" class="indent" onclick="closeMobile()">About</a>
+    <a href="resources.html" class="indent" onclick="closeMobile()">Resources</a>
     <a href="pricing.html" onclick="closeMobile()">Pricing</a>
+    <a href="https://analyzer.sitework.build/scan" onclick="closeMobile()" class="mobile-scan" target="_blank">Free Site Scan</a>
     <a href="index.html#contact" onclick="closeMobile()" class="mobile-cta">Let's Talk</a>
   </div>
 </nav>
