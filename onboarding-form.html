@@ -51,7 +51,7 @@
       { id:3, label:"Service Area" },
       { id:4, label:"Trust & Credibility" },
       { id:5, label:"Brand & Positioning" },
-      { id:6, label:"Assets" },
+      
     ];
 
     const iStyle = {
@@ -332,37 +332,6 @@
       );
     }
 
-    // ── STEP 6 ──
-    function Step6({ d, s }) {
-      return (
-        <div>
-          <Field label="Logo" hint="PNG or SVG preferred. Highest-res version you have.">
-            <FileUpload label="Upload your logo" hint=".PNG, .SVG, .AI, or .PDF accepted"
-              accept=".png,.svg,.ai,.pdf,.jpg,.jpeg,.eps" onChange={e=>s("logo",e.target.files)} files={d.logo} />
-          </Field>
-          <Field label="Job / Work Photos" hint="Up to 10. Real job site photos perform best.">
-            <FileUpload label="Upload work photos (up to 10)" hint="Before/after shots and finished work"
-              multiple accept="image/*" onChange={e=>s("photos",e.target.files)} files={d.photos} />
-          </Field>
-          <Field label="Truck or Equipment Photos" hint="Branded vehicles and gear build credibility.">
-            <FileUpload label="Upload truck / equipment photos" hint="Optional but recommended"
-              multiple accept="image/*" onChange={e=>s("truckPhotos",e.target.files)} files={d.truckPhotos} />
-          </Field>
-          <Field label="Video Link" hint="YouTube or Vimeo. Intro, testimonials, job walkthroughs.">
-            <Input value={d.videoUrl} onChange={e=>s("videoUrl",e.target.value)} placeholder="https://youtube.com/watch?v=..." />
-          </Field>
-          <Field label="Existing Marketing Materials" hint="Flyers, door hangers, mailers — we'll pull useful copy from these.">
-            <FileUpload label="Upload any marketing materials" hint=".PDF, .JPG, .PNG accepted"
-              multiple accept=".pdf,image/*" onChange={e=>s("marketingFiles",e.target.files)} files={d.marketingFiles} />
-          </Field>
-          <Field label="Anything Else We Should Know">
-            <Textarea value={d.notes} onChange={e=>s("notes",e.target.value)}
-              placeholder="Seasonal promotions, upcoming rebrand, important dates, pages you want, things to avoid..." rows={3} />
-          </Field>
-        </div>
-      );
-    }
-
     // ── CONFIRMATION ──
     function Confirmation({ data }) {
       const pill = t => <span style={{background:C.greenDim,color:C.text,fontFamily:"'Montserrat',sans-serif",fontSize:"11px",padding:"3px 10px",borderRadius:"3px",display:"inline-block",margin:"2px"}}>{t}</span>;
@@ -371,12 +340,12 @@
           <div style={{width:"64px",height:"64px",borderRadius:"50%",background:C.greenDim,border:`2px solid ${C.green}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px",fontSize:"28px"}}>✓</div>
           <h2 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"36px",letterSpacing:"0.05em",color:C.text,margin:"0 0 8px"}}>You're all set.</h2>
           <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"14px",color:C.muted,maxWidth:"420px",margin:"0 auto 24px",lineHeight:"1.6"}}>
-            Form received. Expect a message from Carter within 1 business day to confirm next steps.
+Sent. We'll be in touch within 1 business day to confirm next steps.
           </p>
           <div style={{background:"#1A1F16",border:`1px solid ${C.green}`,borderRadius:"6px",padding:"20px 24px",maxWidth:"480px",margin:"0 auto 28px",textAlign:"left"}}>
             <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",fontWeight:"700",letterSpacing:"0.1em",textTransform:"uppercase",color:C.green,marginBottom:"10px"}}>One last step</p>
             <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"14px",color:C.text,lineHeight:"1.6",marginBottom:"12px"}}>
-              Email your logo, photos, and any other files to:
+              Please send your logo and any photos to:
             </p>
             <a href={`mailto:carter@sitework.build?subject=Files — ${data.s1?.businessName||"My Business"}`}
               style={{display:"inline-block",fontFamily:"'Montserrat',sans-serif",fontSize:"14px",fontWeight:"700",color:C.green,textDecoration:"none",letterSpacing:"0.02em",marginBottom:"12px"}}>
@@ -418,7 +387,6 @@
         s3:{ primaryCity:"",additionalAreas:"",serviceRadius:"",gbpUrl:"" },
         s4:{ testimonials:[{},{},{}],googleReviewLink:"",yelpLink:"",angiLink:"",certifications:"",guarantees:"" },
         s5:{ usp:"",idealCustomer:"",competitors:"",tone:"professional",brandColors:"",inspirationUrls:"" },
-        s6:{ logo:null,photos:null,truckPhotos:null,videoUrl:"",marketingFiles:null,notes:"" },
       });
 
       const set = (sk) => (field, val) => setFd(p=>({...p,[sk]:{...p[sk],[field]:val}}));
@@ -434,7 +402,7 @@
       const submit = async () => {
         setSubmitting(true); setError("");
         try {
-          const {s1,s2,s3,s4,s5,s6} = fd;
+          const {s1,s2,s3,s4,s5} = fd;
           const body = {
             access_key:"b58b32ac-9c44-4db1-adac-c99f038af2f2",
             subject:`New SITEWORK Client Onboarding — ${s1.businessName}`,
@@ -457,11 +425,6 @@
             "Certifications":s4.certifications,"Guarantees":s4.guarantees,
             "USP":s5.usp,"Ideal Customer":s5.idealCustomer,"Competitors":s5.competitors,
             "Tone":s5.tone,"Brand Colors":s5.brandColors,"Inspiration URLs":s5.inspirationUrls,
-            "Video URL":s6.videoUrl,"Notes":s6.notes,
-            "Logo Uploaded":s6.logo?.length?`${s6.logo.length} file(s)`:"No",
-            "Photos Uploaded":s6.photos?.length?`${s6.photos.length} file(s)`:"No",
-            "Truck Photos":s6.truckPhotos?.length?`${s6.truckPhotos.length} file(s)`:"No",
-            "Marketing Files":s6.marketingFiles?.length?`${s6.marketingFiles.length} file(s)`:"No",
           };
           const res = await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
           const result = await res.json();
@@ -473,14 +436,12 @@
       const pct = ((step-1)/(STEPS.length-1))*100;
 
       const renderStep = () => {
-        const sk = ["s1","s2","s3","s4","s5","s6"][step-1];
         switch(step){
           case 1: return <Step1 d={fd.s1} s={set("s1")} />;
           case 2: return <Step2 d={fd.s2} s={set("s2")} />;
           case 3: return <Step3 d={fd.s3} s={set("s3")} />;
           case 4: return <Step4 d={fd.s4} s={set("s4")} />;
           case 5: return <Step5 d={fd.s5} s={set("s5")} />;
-          case 6: return <Step6 d={fd.s6} s={set("s6")} />;
         }
       };
 
