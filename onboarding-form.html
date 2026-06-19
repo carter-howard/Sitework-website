@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding — SITEWORK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #0D0D0D; color: #F0EDE8; font-family: 'Montserrat', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0D0D0D; }
+    ::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }
+    input, textarea, select { font-family: 'Montserrat', sans-serif; }
+    input::placeholder, textarea::placeholder { color: #444; }
+    select option { background: #1A1A1A; color: #F0EDE8; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useRef } = React;
+
+    const C = {
+      bg: "#0D0D0D", surface: "#141414", surfaceAlt: "#1A1A1A",
+      border: "#2A2A2A", green: "#5A6B46", greenLight: "#6B7F55",
+      greenDim: "#3D4A30", text: "#F0EDE8", muted: "#8A8A8A", dim: "#444",
+    };
+
+    const SERVICES = [
+      "HVAC (Heating & Cooling)","Plumbing","Electrical","Roofing","Gutters & Drainage",
+      "Siding & Exterior","Windows & Doors","Insulation","Drywall & Plastering",
+      "Painting (Interior & Exterior)","Flooring","Tile & Stone","Carpentry & Trim",
+      "Cabinets & Millwork","Kitchen Remodeling","Bathroom Remodeling","Basement Finishing",
+      "General Contracting","Home Additions","Demolition","Concrete & Flatwork",
+      "Masonry & Brickwork","Waterproofing & Foundation","Excavation & Grading",
+      "Landscaping & Hardscaping","Irrigation & Sprinklers","Tree Service & Arborist",
+      "Fencing","Decks & Patios","Pool & Spa","Garage Doors","Locksmith",
+      "Pest Control","Cleaning Services","Junk Removal","Moving Services",
+      "Appliance Repair","Generator Installation","Solar & Energy","Security Systems","Smart Home / AV",
+    ];
+
+    const STEPS = [
+      { id:1, label:"Business Info" },
+      { id:2, label:"Services" },
+      { id:3, label:"Service Area" },
+      { id:4, label:"Trust & Credibility" },
+      { id:5, label:"Brand & Positioning" },
+      { id:6, label:"Assets" },
+    ];
+
+    const iStyle = {
+      width:"100%", background:"#1A1A1A", border:"1px solid #2A2A2A", borderRadius:"4px",
+      color:"#F0EDE8", fontFamily:"'Montserrat',sans-serif", fontSize:"14px",
+      padding:"11px 14px", outline:"none", boxSizing:"border-box",
+    };
+
+    const lStyle = {
+      display:"block", fontFamily:"'Montserrat',sans-serif", fontSize:"11px",
+      fontWeight:"600", letterSpacing:"0.08em", textTransform:"uppercase",
+      color:"#8A8A8A", marginBottom:"6px",
+    };
+
+    function Field({ label, required, hint, children }) {
+      return (
+        <div style={{marginBottom:"20px"}}>
+          <label style={lStyle}>{label}{required && <span style={{color:C.green,marginLeft:"3px"}}>*</span>}</label>
+          {hint && <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"12px",color:C.dim,marginBottom:"7px"}}>{hint}</p>}
+          {children}
+        </div>
+      );
+    }
+
+    function Input({ value, onChange, placeholder, type="text" }) {
+      const [f,setF] = useState(false);
+      return <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+        onFocus={()=>setF(true)} onBlur={()=>setF(false)}
+        style={{...iStyle, borderColor: f ? C.green : C.border}} />;
+    }
+
+    function Textarea({ value, onChange, placeholder, rows=3 }) {
+      const [f,setF] = useState(false);
+      return <textarea value={value} onChange={onChange} placeholder={placeholder} rows={rows}
+        onFocus={()=>setF(true)} onBlur={()=>setF(false)}
+        style={{...iStyle, resize:"vertical", borderColor: f ? C.green : C.border}} />;
+    }
+
+    function Sel({ value, onChange, options, placeholder }) {
+      const [f,setF] = useState(false);
+      return (
+        <select value={value} onChange={onChange} onFocus={()=>setF(true)} onBlur={()=>setF(false)}
+          style={{...iStyle, borderColor: f ? C.green : C.border, appearance:"none", cursor:"pointer"}}>
+          {placeholder && <option value="">{placeholder}</option>}
+          {options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+        </select>
+      );
+    }
+
+    function RadioGroup({ value, onChange, options }) {
+      return (
+        <div style={{display:"flex",gap:"12px",flexWrap:"wrap"}}>
+          {options.map(o => (
+            <label key={o.v} onClick={()=>onChange(o.v)}
+              style={{display:"flex",alignItems:"center",gap:"8px",cursor:"pointer",
+                fontFamily:"'Montserrat',sans-serif",fontSize:"13px",
+                color: value===o.v ? C.text : C.muted}}>
+              <div style={{width:"16px",height:"16px",borderRadius:"50%",flexShrink:0,
+                border:`2px solid ${value===o.v ? C.green : C.border}`,
+                background: value===o.v ? C.green : "transparent",
+                transition:"all 0.15s"}} />
+              {o.l}
+            </label>
+          ))}
+        </div>
+      );
+    }
+
+    function Toggle({ value, onChange, label }) {
+      return (
+        <label style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}}>
+          <div onClick={()=>onChange(!value)}
+            style={{width:"40px",height:"22px",borderRadius:"11px",
+              background: value ? C.green : C.border,
+              position:"relative",transition:"background 0.2s",cursor:"pointer",flexShrink:0}}>
+            <div style={{position:"absolute",top:"3px",left: value ? "20px":"3px",
+              width:"16px",height:"16px",borderRadius:"50%",background:"#fff",transition:"left 0.2s"}} />
+          </div>
+          <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:"13px",color:C.text}}>{label}</span>
+        </label>
+      );
+    }
+
+    function FileUpload({ label, hint, multiple, accept, onChange, files }) {
+      const ref = useRef();
+      return (
+        <div>
+          <div onClick={()=>ref.current.click()}
+            style={{border:`1px dashed ${C.border}`,borderRadius:"4px",padding:"24px",
+              textAlign:"center",cursor:"pointer",background:C.surfaceAlt}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=C.green}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+            <div style={{fontSize:"22px",marginBottom:"8px"}}>📎</div>
+            <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"13px",color:C.muted,margin:0}}>{label}</p>
+            {hint && <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",color:C.dim,margin:"4px 0 0"}}>{hint}</p>}
+            <input ref={ref} type="file" multiple={multiple} accept={accept} onChange={onChange} style={{display:"none"}} />
+          </div>
+          {files && files.length > 0 && (
+            <div style={{marginTop:"10px",display:"flex",flexWrap:"wrap",gap:"6px"}}>
+              {Array.from(files).map((f,i)=>(
+                <span key={i} style={{background:C.greenDim,color:C.text,fontFamily:"'Montserrat',sans-serif",
+                  fontSize:"11px",padding:"4px 10px",borderRadius:"3px"}}>{f.name}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ── STEP 1 ──
+    function Step1({ d, s }) {
+      return (
+        <div>
+          <Field label="Business Name" required><Input value={d.businessName} onChange={e=>s("businessName",e.target.value)} placeholder="Acme Plumbing Co." /></Field>
+          <Field label="Owner / Primary Contact" required><Input value={d.ownerName} onChange={e=>s("ownerName",e.target.value)} placeholder="John Smith" /></Field>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px"}}>
+            <Field label="Phone" required><Input value={d.phone} onChange={e=>s("phone",e.target.value)} placeholder="(555) 000-0000" type="tel" /></Field>
+            <Field label="Email" required><Input value={d.email} onChange={e=>s("email",e.target.value)} placeholder="you@business.com" type="email" /></Field>
+          </div>
+          <Field label="Current Website" hint="Leave blank if you don't have one."><Input value={d.website} onChange={e=>s("website",e.target.value)} placeholder="https://yourbusiness.com" /></Field>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px"}}>
+            <Field label="Year Founded"><Input value={d.yearFounded} onChange={e=>s("yearFounded",e.target.value)} placeholder="2008" type="number" /></Field>
+            <Field label="Jobs Completed" hint="Rough estimate is fine."><Input value={d.jobsCompleted} onChange={e=>s("jobsCompleted",e.target.value)} placeholder="500+" /></Field>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px"}}>
+            <Field label="Team Size"><Input value={d.teamSize} onChange={e=>s("teamSize",e.target.value)} placeholder="6" type="number" /></Field>
+            <Field label="License Number" hint="Optional — displayed for trust."><Input value={d.licenseNumber} onChange={e=>s("licenseNumber",e.target.value)} placeholder="TX-123456" /></Field>
+          </div>
+          <Field label="Who Do You Serve?" required>
+            <RadioGroup value={d.clientType} onChange={v=>s("clientType",v)}
+              options={[{v:"residential",l:"Residential"},{v:"commercial",l:"Commercial"},{v:"both",l:"Both"}]} />
+          </Field>
+          <Field label="Describe Your Business" required hint="1–2 sentences in your own words. This becomes the foundation of your site copy.">
+            <Textarea value={d.description} onChange={e=>s("description",e.target.value)}
+              placeholder="We're a family-owned HVAC company that's been keeping Austin homes comfortable since 2008. We specialize in same-day repairs and new system installs." rows={4} />
+          </Field>
+        </div>
+      );
+    }
+
+    // ── STEP 2 ──
+    function Step2({ d, s }) {
+      const toggle = (svc) => {
+        const cur = d.services || [];
+        s("services", cur.includes(svc) ? cur.filter(x=>x!==svc) : [...cur,svc]);
+      };
+      return (
+        <div>
+          <Field label="Services Offered" required hint="Select everything that applies.">
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+              {SERVICES.map(svc => {
+                const on = (d.services||[]).includes(svc);
+                return (
+                  <label key={svc} onClick={()=>toggle(svc)}
+                    style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer",
+                      padding:"9px 12px",borderRadius:"4px",
+                      background: on ? C.greenDim : C.surfaceAlt,
+                      border:`1px solid ${on ? C.green : C.border}`,transition:"all 0.15s"}}>
+                    <div style={{width:"14px",height:"14px",borderRadius:"3px",flexShrink:0,
+                      border:`2px solid ${on ? C.green : C.border}`,
+                      background: on ? C.green : "transparent",
+                      display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {on && <span style={{color:"#fff",fontSize:"9px",fontWeight:"bold"}}>✓</span>}
+                    </div>
+                    <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:"12px",color: on ? C.text : C.muted}}>{svc}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </Field>
+          <Field label="Other Services Not Listed">
+            <Input value={d.servicesOther} onChange={e=>s("servicesOther",e.target.value)} placeholder="e.g. Commercial refrigeration, specialty coatings..." />
+          </Field>
+          <div style={{borderTop:`1px solid ${C.border}`,paddingTop:"20px",display:"flex",flexDirection:"column",gap:"14px"}}>
+            <Toggle value={d.emergency24hr} onChange={v=>s("emergency24hr",v)} label="We offer 24-hour / emergency service" />
+            <Toggle value={d.freeEstimates} onChange={v=>s("freeEstimates",v)} label="We offer free estimates" />
+            <Toggle value={d.licensed} onChange={v=>s("licensed",v)} label="Licensed, bonded, and insured" />
+          </div>
+        </div>
+      );
+    }
+
+    // ── STEP 3 ──
+    function Step3({ d, s }) {
+      return (
+        <div>
+          <Field label="Primary City" required><Input value={d.primaryCity} onChange={e=>s("primaryCity",e.target.value)} placeholder="Austin, TX" /></Field>
+          <Field label="Additional Cities or Counties" hint="List all areas you want to show up in search results for.">
+            <Textarea value={d.additionalAreas} onChange={e=>s("additionalAreas",e.target.value)} placeholder="Round Rock, Cedar Park, Pflugerville, Hays County..." rows={3} />
+          </Field>
+          <Field label="Service Radius">
+            <Sel value={d.serviceRadius} onChange={e=>s("serviceRadius",e.target.value)} placeholder="Select a radius..."
+              options={[{v:"10",l:"Within 10 miles"},{v:"25",l:"Within 25 miles"},{v:"50",l:"Within 50 miles"},{v:"100",l:"Within 100 miles"},{v:"statewide",l:"Statewide"}]} />
+          </Field>
+          <Field label="Google Business Profile URL" hint="Helps us pull your reviews and verify your service area.">
+            <Input value={d.gbpUrl} onChange={e=>s("gbpUrl",e.target.value)} placeholder="https://maps.google.com/..." />
+          </Field>
+        </div>
+      );
+    }
+
+    // ── STEP 4 ──
+    function Step4({ d, s }) {
+      const upd = (i, field, val) => {
+        const t = [...(d.testimonials || [{},{},{}])];
+        t[i] = {...t[i],[field]:val};
+        s("testimonials",t);
+      };
+      const t = d.testimonials || [{},{},{}];
+      return (
+        <div>
+          <Field label="Customer Testimonials" hint="Add up to 3. These go directly on your site.">
+            {[0,1,2].map(i=>(
+              <div key={i} style={{background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:"4px",padding:"16px",marginBottom:"12px"}}>
+                <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",fontWeight:"600",color:C.green,letterSpacing:"0.08em",textTransform:"uppercase",marginTop:0,marginBottom:"12px"}}>Review {i+1}</p>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"12px"}}>
+                  <div>
+                    <label style={lStyle}>Customer Name</label>
+                    <Input value={t[i]?.name||""} onChange={e=>upd(i,"name",e.target.value)} placeholder="Sarah M." />
+                  </div>
+                  <div>
+                    <label style={lStyle}>Star Rating</label>
+                    <Sel value={t[i]?.rating||""} onChange={e=>upd(i,"rating",e.target.value)} placeholder="Select..."
+                      options={[{v:"5",l:"★★★★★  5 stars"},{v:"4",l:"★★★★  4 stars"},{v:"3",l:"★★★  3 stars"}]} />
+                  </div>
+                </div>
+                <label style={lStyle}>Their Words</label>
+                <Textarea value={t[i]?.quote||""} onChange={e=>upd(i,"quote",e.target.value)} placeholder="They showed up on time, fixed the issue fast, and were upfront about pricing." rows={2} />
+              </div>
+            ))}
+          </Field>
+          <Field label="Review Platform Links" hint="Any combination is fine.">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <Input value={d.googleReviewLink} onChange={e=>s("googleReviewLink",e.target.value)} placeholder="Google Reviews URL" />
+              <Input value={d.yelpLink} onChange={e=>s("yelpLink",e.target.value)} placeholder="Yelp URL (optional)" />
+              <Input value={d.angiLink} onChange={e=>s("angiLink",e.target.value)} placeholder="Angi / HomeAdvisor URL (optional)" />
+            </div>
+          </Field>
+          <Field label="Certifications, Awards & Affiliations" hint="BBB, NARI, ACCA, manufacturer certs, awards, etc.">
+            <Textarea value={d.certifications} onChange={e=>s("certifications",e.target.value)} placeholder="BBB A+ Accredited, NATE-Certified Technicians, Trane Comfort Specialist..." rows={2} />
+          </Field>
+          <Field label="Guarantees or Warranties" hint="What do you stand behind? This builds conversion.">
+            <Textarea value={d.guarantees} onChange={e=>s("guarantees",e.target.value)} placeholder="1-year labor warranty on all repairs. 100% satisfaction guarantee or we come back free." rows={2} />
+          </Field>
+        </div>
+      );
+    }
+
+    // ── STEP 5 ──
+    function Step5({ d, s }) {
+      return (
+        <div>
+          <Field label="What Sets You Apart?" required hint="Your USP — 1 to 2 sentences. Be specific, not generic.">
+            <Textarea value={d.usp} onChange={e=>s("usp",e.target.value)}
+              placeholder="We're the only licensed plumber in the area that offers same-day service with a flat-rate price before we start — no surprises on the bill." rows={3} />
+          </Field>
+          <Field label="Ideal Customer" hint="Who do you want calling you most?">
+            <Input value={d.idealCustomer} onChange={e=>s("idealCustomer",e.target.value)} placeholder="Homeowners in North Austin, property managers, custom builders..." />
+          </Field>
+          <Field label="Competitor Names in Your Market" hint="Internal use only — helps us position your site correctly.">
+            <Input value={d.competitors} onChange={e=>s("competitors",e.target.value)} placeholder="ABC Plumbing, Premier HVAC, Smith Brothers..." />
+          </Field>
+          <Field label="Site Tone / Vibe" required hint="Pick the one that feels most like your business.">
+            <RadioGroup value={d.tone} onChange={v=>s("tone",v)} options={[
+              {v:"professional",l:"Professional & Formal"},
+              {v:"friendly",l:"Friendly & Approachable"},
+              {v:"bold",l:"Bold & Urgent"},
+              {v:"local",l:"Local & Community-First"},
+            ]} />
+          </Field>
+          <Field label="Brand Colors" hint="Hex codes, Pantone, or just describe them.">
+            <Input value={d.brandColors} onChange={e=>s("brandColors",e.target.value)} placeholder="Navy blue and white, or #1A3A5C" />
+          </Field>
+          <Field label="Websites You Like" hint="2–3 URLs of sites whose look or feel you respect.">
+            <Textarea value={d.inspirationUrls} onChange={e=>s("inspirationUrls",e.target.value)} placeholder={"https://example.com\nhttps://example2.com"} rows={2} />
+          </Field>
+        </div>
+      );
+    }
+
+    // ── STEP 6 ──
+    function Step6({ d, s }) {
+      return (
+        <div>
+          <Field label="Logo" hint="PNG or SVG preferred. Highest-res version you have.">
+            <FileUpload label="Upload your logo" hint=".PNG, .SVG, .AI, or .PDF accepted"
+              accept=".png,.svg,.ai,.pdf,.jpg,.jpeg,.eps" onChange={e=>s("logo",e.target.files)} files={d.logo} />
+          </Field>
+          <Field label="Job / Work Photos" hint="Up to 10. Real job site photos perform best.">
+            <FileUpload label="Upload work photos (up to 10)" hint="Before/after shots and finished work"
+              multiple accept="image/*" onChange={e=>s("photos",e.target.files)} files={d.photos} />
+          </Field>
+          <Field label="Truck or Equipment Photos" hint="Branded vehicles and gear build credibility.">
+            <FileUpload label="Upload truck / equipment photos" hint="Optional but recommended"
+              multiple accept="image/*" onChange={e=>s("truckPhotos",e.target.files)} files={d.truckPhotos} />
+          </Field>
+          <Field label="Video Link" hint="YouTube or Vimeo. Intro, testimonials, job walkthroughs.">
+            <Input value={d.videoUrl} onChange={e=>s("videoUrl",e.target.value)} placeholder="https://youtube.com/watch?v=..." />
+          </Field>
+          <Field label="Existing Marketing Materials" hint="Flyers, door hangers, mailers — we'll pull useful copy from these.">
+            <FileUpload label="Upload any marketing materials" hint=".PDF, .JPG, .PNG accepted"
+              multiple accept=".pdf,image/*" onChange={e=>s("marketingFiles",e.target.files)} files={d.marketingFiles} />
+          </Field>
+          <Field label="Anything Else We Should Know">
+            <Textarea value={d.notes} onChange={e=>s("notes",e.target.value)}
+              placeholder="Seasonal promotions, upcoming rebrand, important dates, pages you want, things to avoid..." rows={3} />
+          </Field>
+        </div>
+      );
+    }
+
+    // ── CONFIRMATION ──
+    function Confirmation({ data }) {
+      const pill = t => <span style={{background:C.greenDim,color:C.text,fontFamily:"'Montserrat',sans-serif",fontSize:"11px",padding:"3px 10px",borderRadius:"3px",display:"inline-block",margin:"2px"}}>{t}</span>;
+      return (
+        <div style={{textAlign:"center",padding:"20px 0"}}>
+          <div style={{width:"64px",height:"64px",borderRadius:"50%",background:C.greenDim,border:`2px solid ${C.green}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px",fontSize:"28px"}}>✓</div>
+          <h2 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"36px",letterSpacing:"0.05em",color:C.text,margin:"0 0 8px"}}>You're all set.</h2>
+          <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"14px",color:C.muted,maxWidth:"400px",margin:"0 auto 32px",lineHeight:"1.6"}}>
+            We received everything. Expect a message from Carter at carter@sitework.build within 1 business day to confirm next steps.
+          </p>
+          <div style={{textAlign:"left",background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:"6px",padding:"24px",maxWidth:"480px",margin:"0 auto"}}>
+            <p style={{...lStyle,marginBottom:"16px"}}>Submission Summary</p>
+            <div style={{display:"flex",flexDirection:"column",gap:"10px",fontFamily:"'Montserrat',sans-serif",fontSize:"13px"}}>
+              <div><span style={{color:C.muted}}>Business: </span><span style={{color:C.text}}>{data.s1?.businessName||"—"}</span></div>
+              <div><span style={{color:C.muted}}>Contact: </span><span style={{color:C.text}}>{data.s1?.ownerName} · {data.s1?.email}</span></div>
+              <div><span style={{color:C.muted}}>Location: </span><span style={{color:C.text}}>{data.s3?.primaryCity||"—"}</span></div>
+              <div><span style={{color:C.muted}}>Services: </span>
+                <div style={{marginTop:"6px"}}>
+                  {(data.s2?.services||[]).slice(0,6).map(sv=>pill(sv))}
+                  {(data.s2?.services||[]).length>6 && pill(`+${data.s2.services.length-6} more`)}
+                </div>
+              </div>
+              <div><span style={{color:C.muted}}>Tone: </span><span style={{color:C.text,textTransform:"capitalize"}}>{data.s5?.tone||"—"}</span></div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── APP ──
+    function App() {
+      const [step, setStep] = useState(1);
+      const [submitted, setSubmitted] = useState(false);
+      const [submitting, setSubmitting] = useState(false);
+      const [error, setError] = useState("");
+
+      const [fd, setFd] = useState({
+        s1:{ businessName:"",ownerName:"",phone:"",email:"",website:"",yearFounded:"",jobsCompleted:"",teamSize:"",licenseNumber:"",clientType:"residential",description:"" },
+        s2:{ services:[],servicesOther:"",emergency24hr:false,freeEstimates:false,licensed:false },
+        s3:{ primaryCity:"",additionalAreas:"",serviceRadius:"",gbpUrl:"" },
+        s4:{ testimonials:[{},{},{}],googleReviewLink:"",yelpLink:"",angiLink:"",certifications:"",guarantees:"" },
+        s5:{ usp:"",idealCustomer:"",competitors:"",tone:"professional",brandColors:"",inspirationUrls:"" },
+        s6:{ logo:null,photos:null,truckPhotos:null,videoUrl:"",marketingFiles:null,notes:"" },
+      });
+
+      const set = (sk) => (field, val) => setFd(p=>({...p,[sk]:{...p[sk],[field]:val}}));
+
+      const canGo = () => {
+        if(step===1){ const d=fd.s1; return d.businessName&&d.ownerName&&d.phone&&d.email&&d.description&&d.clientType; }
+        if(step===2) return (fd.s2.services||[]).length>0;
+        if(step===3) return fd.s3.primaryCity;
+        if(step===5) return fd.s5.usp&&fd.s5.tone;
+        return true;
+      };
+
+      const submit = async () => {
+        setSubmitting(true); setError("");
+        try {
+          const {s1,s2,s3,s4,s5,s6} = fd;
+          const body = {
+            access_key:"b58b32ac-9c44-4db1-adac-c99f038af2f2",
+            subject:`New SITEWORK Client Onboarding — ${s1.businessName}`,
+            from_name: s1.ownerName,
+            email: s1.email,
+            "Business Name":s1.businessName,"Owner":s1.ownerName,"Phone":s1.phone,"Email":s1.email,
+            "Current Website":s1.website||"None","Year Founded":s1.yearFounded,
+            "Jobs Completed":s1.jobsCompleted,"Team Size":s1.teamSize,
+            "License Number":s1.licenseNumber||"Not provided","Client Type":s1.clientType,
+            "Business Description":s1.description,
+            "Services":(s2.services||[]).join(", "),"Other Services":s2.servicesOther,
+            "24hr Emergency":s2.emergency24hr?"Yes":"No","Free Estimates":s2.freeEstimates?"Yes":"No",
+            "Licensed/Bonded/Insured":s2.licensed?"Yes":"No",
+            "Primary City":s3.primaryCity,"Additional Areas":s3.additionalAreas,
+            "Service Radius":s3.serviceRadius,"GBP URL":s3.gbpUrl,
+            "Testimonial 1":s4.testimonials?.[0]?.name?`${s4.testimonials[0].name} (${s4.testimonials[0].rating}★): ${s4.testimonials[0].quote}`:"Not provided",
+            "Testimonial 2":s4.testimonials?.[1]?.name?`${s4.testimonials[1].name} (${s4.testimonials[1].rating}★): ${s4.testimonials[1].quote}`:"Not provided",
+            "Testimonial 3":s4.testimonials?.[2]?.name?`${s4.testimonials[2].name} (${s4.testimonials[2].rating}★): ${s4.testimonials[2].quote}`:"Not provided",
+            "Google Reviews":s4.googleReviewLink,"Yelp":s4.yelpLink,"Angi":s4.angiLink,
+            "Certifications":s4.certifications,"Guarantees":s4.guarantees,
+            "USP":s5.usp,"Ideal Customer":s5.idealCustomer,"Competitors":s5.competitors,
+            "Tone":s5.tone,"Brand Colors":s5.brandColors,"Inspiration URLs":s5.inspirationUrls,
+            "Video URL":s6.videoUrl,"Notes":s6.notes,
+            "Logo Uploaded":s6.logo?.length?`${s6.logo.length} file(s)`:"No",
+            "Photos Uploaded":s6.photos?.length?`${s6.photos.length} file(s)`:"No",
+            "Truck Photos":s6.truckPhotos?.length?`${s6.truckPhotos.length} file(s)`:"No",
+            "Marketing Files":s6.marketingFiles?.length?`${s6.marketingFiles.length} file(s)`:"No",
+          };
+          const res = await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+          const result = await res.json();
+          if(result.success){ setSubmitted(true); } else { setError("Something went wrong. Email carter@sitework.build directly."); }
+        } catch(e) { setError("Submission failed. Email carter@sitework.build directly."); }
+        setSubmitting(false);
+      };
+
+      const pct = ((step-1)/(STEPS.length-1))*100;
+
+      const renderStep = () => {
+        const sk = ["s1","s2","s3","s4","s5","s6"][step-1];
+        switch(step){
+          case 1: return <Step1 d={fd.s1} s={set("s1")} />;
+          case 2: return <Step2 d={fd.s2} s={set("s2")} />;
+          case 3: return <Step3 d={fd.s3} s={set("s3")} />;
+          case 4: return <Step4 d={fd.s4} s={set("s4")} />;
+          case 5: return <Step5 d={fd.s5} s={set("s5")} />;
+          case 6: return <Step6 d={fd.s6} s={set("s6")} />;
+        }
+      };
+
+      const btnBase = {fontFamily:"'Montserrat',sans-serif",fontSize:"12px",fontWeight:"700",letterSpacing:"0.08em",textTransform:"uppercase",padding:"12px 32px",borderRadius:"4px",border:"none",cursor:"pointer",transition:"all 0.15s"};
+
+      return (
+        <div style={{minHeight:"100vh",background:C.bg,paddingBottom:"80px"}}>
+
+          {/* Header */}
+          <div style={{borderBottom:`1px solid ${C.border}`,padding:"20px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,background:C.bg,zIndex:10}}>
+            <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+              <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"22px",letterSpacing:"0.1em",color:C.text}}>SITEWORK</span>
+              <span style={{width:"1px",height:"18px",background:C.border}} />
+              <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",color:C.muted,letterSpacing:"0.05em"}}>CLIENT ONBOARDING</span>
+            </div>
+            {!submitted && <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:"12px",color:C.muted}}>Step {step} of {STEPS.length}</span>}
+          </div>
+
+          {/* Progress bar */}
+          {!submitted && (
+            <div style={{height:"2px",background:C.border}}>
+              <div style={{height:"100%",width:`${pct}%`,background:C.green,transition:"width 0.4s ease"}} />
+            </div>
+          )}
+
+          <div style={{maxWidth:"640px",margin:"0 auto",padding:"0 24px"}}>
+            {submitted ? (
+              <div style={{paddingTop:"60px"}}><Confirmation data={fd} /></div>
+            ) : (
+              <>
+                {/* Step header */}
+                <div style={{paddingTop:"48px",paddingBottom:"32px"}}>
+                  <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",fontWeight:"600",letterSpacing:"0.1em",textTransform:"uppercase",color:C.green,marginBottom:"8px"}}>Step {step} / {STEPS.length}</p>
+                  <h1 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"40px",letterSpacing:"0.04em",color:C.text,lineHeight:1}}>{STEPS[step-1].label}</h1>
+                </div>
+
+                {/* Step pills */}
+                <div style={{display:"flex",gap:"6px",flexWrap:"wrap",marginBottom:"32px"}}>
+                  {STEPS.map(st=>(
+                    <button key={st.id} onClick={()=>st.id<step&&setStep(st.id)}
+                      style={{fontFamily:"'Montserrat',sans-serif",fontSize:"10px",fontWeight:"600",letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",borderRadius:"3px",border:"none",cursor:st.id<step?"pointer":"default",background:st.id===step?C.green:st.id<step?C.greenDim:C.surfaceAlt,color:st.id<=step?C.text:C.dim,transition:"all 0.15s"}}>
+                      {st.id<step?"✓ ":""}{st.label}
+                    </button>
+                  ))}
+                </div>
+
+                {renderStep()}
+
+                {error && (
+                  <div style={{background:"#2C1010",border:"1px solid #C0392B",borderRadius:"4px",padding:"12px 16px",marginTop:"16px",fontFamily:"'Montserrat',sans-serif",fontSize:"13px",color:"#E74C3C"}}>{error}</div>
+                )}
+
+                {/* Nav */}
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"40px",paddingTop:"24px",borderTop:`1px solid ${C.border}`}}>
+                  <button onClick={()=>setStep(s=>s-1)} disabled={step===1}
+                    style={{...btnBase,background:"transparent",border:`1px solid ${C.border}`,color:step===1?C.dim:C.muted,cursor:step===1?"not-allowed":"pointer",fontWeight:"600"}}>
+                    ← Back
+                  </button>
+                  {step < STEPS.length ? (
+                    <button onClick={()=>{if(canGo())setStep(s=>s+1);}}
+                      style={{...btnBase,background:canGo()?C.green:C.greenDim,color:canGo()?"#fff":C.dim,opacity:canGo()?1:0.6,cursor:canGo()?"pointer":"not-allowed"}}>
+                      Continue →
+                    </button>
+                  ) : (
+                    <button onClick={submit} disabled={submitting}
+                      style={{...btnBase,background:C.green,color:"#fff",opacity:submitting?0.7:1,cursor:submitting?"wait":"pointer"}}>
+                      {submitting?"Sending...":"Submit →"}
+                    </button>
+                  )}
+                </div>
+                <p style={{fontFamily:"'Montserrat',sans-serif",fontSize:"11px",color:C.dim,marginTop:"16px",textAlign:"right"}}><span style={{color:C.green}}>*</span> Required fields</p>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
